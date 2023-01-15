@@ -1,0 +1,37 @@
+[14-Jan-2023 06:37:32 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::text() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 14
+[14-Jan-2023 06:37:45 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::text() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 14
+[14-Jan-2023 06:38:23 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::text() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 14
+[14-Jan-2023 06:40:06 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::text() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 18
+[14-Jan-2023 06:42:24 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::text() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:20
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 20
+[14-Jan-2023 06:43:15 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::text() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 17
+[14-Jan-2023 07:00:27 Asia/Jakarta] PHP Notice:  Undefined variable: node in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 17
+[14-Jan-2023 07:00:27 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to a member function filter() on null in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:17
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 17
+[14-Jan-2023 07:01:20 Asia/Jakarta] PHP Recoverable fatal error:  Object of class Symfony\Component\DomCrawler\Crawler could not be converted to string in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 19
+[14-Jan-2023 07:12:30 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Call to undefined method DOMElement::filter() in /home/sipuwebi/ilkomapp.com/test/api/sinta.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 14
+[15-Jan-2023 17:02:12 Asia/Jakarta] PHP Fatal error:  Only variables can be passed by reference in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 12
+[15-Jan-2023 17:02:39 Asia/Jakarta] PHP Fatal error:  Only variables can be passed by reference in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 12
+[15-Jan-2023 17:37:52 Asia/Jakarta] PHP Parse error:  syntax error, unexpected '}', expecting ';' in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 17
