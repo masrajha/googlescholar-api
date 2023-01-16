@@ -7,7 +7,7 @@ use Goutte\Client;
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_GET["user"]))
-    $_GET["user"] = "6021756";
+    $_GET["user"] = "5980587";
 
 function getProfile($user)
 {
@@ -160,7 +160,11 @@ function getResearches($user, $source = "researches")
         $research->link = $link;
         $research->year = $year->text();
         $research->fund = $fund->text();
-        $research->source = $src->text();
+        $research->source = "";
+        if ($src->count()>0)
+            $research->source = $src->text();
+        
+
         // $research->pub = $pub->text();
 
         // return $title->text()." ".$link." ".$year->text()." ".$cited->text();
@@ -203,8 +207,8 @@ $sinta->profile = getProfile($_GET["user"]);
 $sinta->articles->scopus = getArticles($_GET["user"],"scopus");
 $sinta->articles->wos = getArticles($_GET["user"],"wos");
 $sinta->articles->googlescholar = getArticles($_GET["user"],"googlescholar");
-// $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
-// $sinta->articles->rama = getArticles($_GET["user"],"rama");
+// // $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
+// // $sinta->articles->rama = getArticles($_GET["user"],"rama");
 $sinta->iprs = getIprs($_GET["user"]);
 $sinta->researches = getResearches($_GET["user"]);
 $sinta->service = getResearches($_GET["user"],"services");
