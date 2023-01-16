@@ -1,8 +1,9 @@
 <?php
+error_reporting(1);
 header('Content-Type: application/json; charset=utf-8');
 
 if(!isset($_GET["user"]))
-        exit -1;
+        $_GET["user"]="6021756";
 
 
 require 'vendor/autoload.php';
@@ -42,5 +43,38 @@ foreach ($articles as $article) {
     array_push($data,$article);
 }
 
-echo json_encode($data);
+
+// Find user profile on the page
+$profiles = $crawler->filter('.content-box')->each(function($content){
+    $node = $content->filter('.p-3');
+    $name = $node->filter('h3');
+    $photo = $node->filter('img')->attr('src');
+    $stat = $content->filter('.stat-profile');
+    $nums = $stat->filter('.pr-num')->each(function($el){
+   	return $el->text();
+   });
+    $scores = array();
+    foreach ($nums as $score) {
+        array_push($scores,$score);
+    }
+    $profile->sinta_score=$scores[0];
+    $profile->sinta_score_3yr=$scores[1];
+    $profile->sinta_score_afill=$scores[2];
+    $profile->sinta_score_afill_3yr=$scores[3];
+    $profile->name=$name->text();
+    $profile->photo=$photo;
+    return $profile;
+    //print_r($profile);
+    //return $name->text()." ".$photo." ".$scores[0];
+});
+/*
+foreach($profiles as $p){
+  echo $p."\n";
+}
+*/
+
+$sinta->profile=$profiles[0];
+$sinta->data=$data;
+//print_r($sinta);
+echo json_encode($sinta);
 
