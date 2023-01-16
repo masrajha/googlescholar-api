@@ -7,7 +7,7 @@ use Goutte\Client;
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_GET["user"]))
-    $_GET["user"] = "5980587";
+    $_GET["user"] = "5980605";
 
 function getProfile($user)
 {
@@ -15,9 +15,11 @@ function getProfile($user)
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
     $crawler = $client->request('GET', $url);
-
+    $content = $crawler->filter('.content-box');
+    if ($content->count() == 0)
+        return [];
     // Find user profile on the page
-    $profiles = $crawler->filter('.content-box')->each(function ($content) {
+    $profiles = $content->each(function ($content) {
         $profile = new stdClass();
         $node = $content->filter('.p-3');
         $name = $node->filter('h3');
@@ -58,9 +60,11 @@ function getArticles($user, $source = "")
         $url .= '/?view=' . $source;
 
     $crawler = $client->request('GET', $url);
-
+    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($content->count() == 0)
+        return [];
     // Find all the article elements on the page
-    $articles = $crawler->filter('.profile-article')->filter('.ar-list-item')->each(function ($node) {
+    $articles = $content->each(function ($node) {
         $article = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -97,9 +101,12 @@ function getIprs($user, $source = "iprs")
         $url .= '/?view=' . $source;
 
     $crawler = $client->request('GET', $url);
+    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($content->count() == 0)
+        return [];
 
     // Find all the article elements on the page
-    $iprs = $crawler->filter('.profile-article')->filter('.ar-list-item')->each(function ($node) {
+    $iprs = $content->each(function ($node) {
         $ipr = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -148,7 +155,11 @@ function getResearches($user, $source = "researches")
     $crawler = $client->request('GET', $url);
 
     // Find all the article elements on the page
-    $researches = $crawler->filter('.profile-article')->filter('.ar-list-item')->each(function ($node) {
+    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($content->count() == 0)
+        return [];
+
+    $researches = $content->each(function ($node) {
         $research = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -187,7 +198,11 @@ function summary($user){
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
     $crawler = $client->request('GET', $url);
-    $tableData = $crawler->filter('table tr')->each(function ($row) {
+    $content = $crawler->filter('table tr');
+    if ($content->count() == 0)
+        return [];
+
+    $tableData = $content->each(function ($row) {
         return $row->filter('td')->each(function ($cell) {
             return $cell->text();
         });
@@ -214,5 +229,5 @@ $sinta->researches = getResearches($_GET["user"]);
 $sinta->service = getResearches($_GET["user"],"services");
 $sinta->summary = summary($_GET["user"]);
 
-//print_r($sinta);
+// print_r($sinta);
 echo json_encode($sinta);
