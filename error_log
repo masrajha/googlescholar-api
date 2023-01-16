@@ -1001,3 +1001,32 @@ Stack trace:
 #2 /home/sipuwebi/ilkomapp.com/test/api/sinta-profile.php(69): Symfony\Component\DomCrawler\Crawler->each(Object(Closure))
 #3 {main}
   thrown in /home/sipuwebi/ilkomapp.com/test/api/vendor/symfony/dom-crawler/Crawler.php on line 577
+[16-Jan-2023 08:03:33 Asia/Jakarta] PHP Fatal error:  Uncaught InvalidArgumentException: The current node list is empty. in /home/sipuwebi/ilkomapp.com/test/api/vendor/symfony/dom-crawler/Crawler.php:577
+Stack trace:
+#0 /home/sipuwebi/ilkomapp.com/test/api/sinta-profile.php(51): Symfony\Component\DomCrawler\Crawler->attr('src')
+#1 /home/sipuwebi/ilkomapp.com/test/api/vendor/symfony/dom-crawler/Crawler.php(358): {closure}(Object(Symfony\Component\DomCrawler\Crawler), 0)
+#2 /home/sipuwebi/ilkomapp.com/test/api/sinta-profile.php(69): Symfony\Component\DomCrawler\Crawler->each(Object(Closure))
+#3 {main}
+  thrown in /home/sipuwebi/ilkomapp.com/test/api/vendor/symfony/dom-crawler/Crawler.php on line 577
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:03:52 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:10 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:10 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
+[16-Jan-2023 08:04:11 Asia/Jakarta] PHP Warning:  Creating default object from empty value in /home/sipuwebi/ilkomapp.com/test/api/sinta.php on line 26
