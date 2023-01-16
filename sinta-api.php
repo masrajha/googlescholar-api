@@ -9,46 +9,48 @@ header('Content-Type: application/json; charset=utf-8');
 if (!isset($_GET["user"]))
     $_GET["user"] = "6021756";
 
-    function getProfile($user){
-        $client = new Client();
-        $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
-    
-        $crawler = $client->request('GET', $url);
-    
-        // Find user profile on the page
-        $profiles = $crawler->filter('.content-box')->each(function ($content) {
-            $profile = new stdClass();
-            $node = $content->filter('.p-3');
-            $name = $node->filter('h3');
-            $photo = $node->filter('img')->attr('src');
-            $stat = $content->filter('.stat-profile');
-            $nums = $stat->filter('.pr-num')->each(function ($el) {
+function getProfile($user)
+{
+    $client = new Client();
+    $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
+
+    $crawler = $client->request('GET', $url);
+
+    // Find user profile on the page
+    $profiles = $crawler->filter('.content-box')->each(function ($content) {
+        $profile = new stdClass();
+        $node = $content->filter('.p-3');
+        $name = $node->filter('h3');
+        $photo = $node->filter('img')->attr('src');
+        $stat = $content->filter('.stat-profile');
+        $nums = $stat->filter('.pr-num')->each(
+            function ($el) {
                 return $el->text();
             }
-            );
-            $scores = array();
-            foreach ($nums as $score) {
-                array_push($scores, $score);
-            }
-            $profile->sinta_score = $scores[0];
-            $profile->sinta_score_3yr = $scores[1];
-            $profile->sinta_score_afill = $scores[2];
-            $profile->sinta_score_afill_3yr = $scores[3];
-            $profile->name = $name->text();
-            $profile->photo = $photo;
-            return $profile;
-            //print_r($profile);
-            //return $name->text()." ".$photo." ".$scores[0];
-        });
-        return $profiles[0];
-    }
+        );
+        $scores = array();
+        foreach ($nums as $score) {
+            array_push($scores, $score);
+        }
+        $profile->name = $name->text();
+        $profile->photo = $photo;
+        $profile->sinta_score = $scores[0];
+        $profile->sinta_score_3yr = $scores[1];
+        $profile->sinta_score_afill = $scores[2];
+        $profile->sinta_score_afill_3yr = $scores[3];
+        return $profile;
+        //print_r($profile);
+        //return $name->text()." ".$photo." ".$scores[0];
+    });
+    return $profiles[0];
+}
 /**
  * Get all article from SINTA
  * has two parameters, user and source
  * - user is sinta-id
  * - source value: scopus, wos, googlescholar, garuda, rama 
  */
-function getArticles($user,$source="")
+function getArticles($user, $source = "")
 {
     $client = new Client();
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
@@ -59,7 +61,7 @@ function getArticles($user,$source="")
 
     // Find all the article elements on the page
     $articles = $crawler->filter('.profile-article')->filter('.ar-list-item')->each(function ($node) {
-        $article=new stdClass();
+        $article = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
         $year = $node->filter('.ar-year');
@@ -87,14 +89,126 @@ function getArticles($user,$source="")
     return $data;
 }
 
+function getIprs($user, $source = "iprs")
+{
+    $client = new Client();
+    $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
+    if (isset($source))
+        $url .= '/?view=' . $source;
 
-/*
-foreach($profiles as $p){
-echo $p."\n";
+    $crawler = $client->request('GET', $url);
+
+    // Find all the article elements on the page
+    $iprs = $crawler->filter('.profile-article')->filter('.ar-list-item')->each(function ($node) {
+        $ipr = new stdClass();
+        $title = $node->filter('.ar-title');
+        $link = $title->filter('a')->attr('href');
+        $year = $node->filter('.ar-year');
+        $ipr_number = $node->filter('.ar-cited');
+        $ipr_cat = $node->filter('.ar-quartile');
+        $pub = $node->filter('.ar-pub');
+        $ipr->title = $title->text();
+        $ipr->link = $link;
+        $ipr->year = $year->text();
+        $ipr->number = $ipr_number->text();
+        $ipr->inventor = $pub->text();
+        $ipr->category = $ipr_cat->text();
+
+        // return $title->text()." ".$link." ".$year->text()." ".$cited->text();
+        return $ipr;
+
+    });
+
+    // Print the text of each article
+    $data = [];
+    foreach ($iprs as $ipr) {
+        //$title = $article->filter('.ar-title');
+        //echo $article."\n";
+        //echo $title."\n";
+        array_push($data, $ipr);
+    }
+    return $data;
 }
-*/
+/**
+ * 
+ * Fungsi yang digunakan untuk mengambil data penelitian dan pengabdian
+ * @param mixed $user
+ * @param mixed $source
+ * @return array
+ * 
+ * $source value 'services' or 'researches'
+ */
+function getResearches($user, $source = "researches")
+{
+    $client = new Client();
+    $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
+    if (isset($source))
+        $url .= '/?view=' . $source;
+
+    $crawler = $client->request('GET', $url);
+
+    // Find all the article elements on the page
+    $researches = $crawler->filter('.profile-article')->filter('.ar-list-item')->each(function ($node) {
+        $research = new stdClass();
+        $title = $node->filter('.ar-title');
+        $link = $title->filter('a')->attr('href');
+        $year = $node->filter('.ar-year');
+        $fund = $node->filter('.ar-quartile');
+        $src = $node->filter('.text-info');
+        // $pub = $node->filter('.ar-pub');
+        $research->title = $title->text();
+        $research->link = $link;
+        $research->year = $year->text();
+        $research->fund = $fund->text();
+        $research->source = $src->text();
+        // $research->pub = $pub->text();
+
+        // return $title->text()." ".$link." ".$year->text()." ".$cited->text();
+        return $research;
+
+    });
+
+    // Print the text of each article
+    $data = [];
+    foreach ($researches as $research) {
+        //$title = $article->filter('.ar-title');
+        //echo $article."\n";
+        //echo $title."\n";
+        array_push($data, $research);
+    }
+    return $data;
+}
+function summary($user){
+    $client = new Client();
+    $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
+
+    $crawler = $client->request('GET', $url);
+    $tableData = $crawler->filter('table tr')->each(function ($row) {
+        return $row->filter('td')->each(function ($cell) {
+            return $cell->text();
+        });
+    });
+    array_shift($tableData);
+    $summaries = [];
+    foreach($tableData as $el){
+        $label = array_shift($el);
+        $summaries[$label]["scopus"]= $el[0];
+        $summaries[$label]["gs"]= $el[1];
+        $summaries[$label]["wos"]= $el[2];
+    }
+    return $summaries;
+}
 $sinta = new stdClass();
 $sinta->profile = getProfile($_GET["user"]);
-$sinta->data = getArticles($_GET["user"]);
+$sinta->articles->scopus = getArticles($_GET["user"],"scopus");
+$sinta->articles->wos = getArticles($_GET["user"],"wos");
+$sinta->articles->googlescholar = getArticles($_GET["user"],"googlescholar");
+// $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
+// $sinta->articles->rama = getArticles($_GET["user"],"rama");
+$sinta->iprs = getIprs($_GET["user"]);
+$sinta->researches = getResearches($_GET["user"]);
+$sinta->service = getResearches($_GET["user"],"services");
+$sinta->summary = summary($_GET["user"]);
+
 //print_r($sinta);
 echo json_encode($sinta);
