@@ -15,11 +15,11 @@ function getProfile($user)
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('.content-box');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('.content-box');
+    if ($contents->count() == 0)
         return [];
     // Find user profile on the page
-    $profiles = $content->each(function ($content) {
+    $profiles = $contents->each(function ($content) {
         $profile = new stdClass();
         $node = $content->filter('.p-3');
         $name = $node->filter('h3');
@@ -60,11 +60,11 @@ function getArticles($user, $source = "")
         $url .= '/?view=' . $source;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($contents->count() == 0)
         return [];
     // Find all the article elements on the page
-    $articles = $content->each(function ($node) {
+    $articles = $contents->each(function ($node) {
         $article = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -101,12 +101,12 @@ function getIprs($user, $source = "iprs")
         $url .= '/?view=' . $source;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($contents->count() == 0)
         return [];
 
     // Find all the article elements on the page
-    $iprs = $content->each(function ($node) {
+    $iprs = $contents->each(function ($node) {
         $ipr = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -155,11 +155,11 @@ function getResearches($user, $source = "researches")
     $crawler = $client->request('GET', $url);
 
     // Find all the article elements on the page
-    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($contents->count() == 0)
         return [];
 
-    $researches = $content->each(function ($node) {
+    $researches = $contents->each(function ($node) {
         $research = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -198,11 +198,11 @@ function summary($user){
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('table tr');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('table tr');
+    if ($contents->count() == 0)
         return [];
 
-    $tableData = $content->each(function ($row) {
+    $tableData = $contents->each(function ($row) {
         return $row->filter('td')->each(function ($cell) {
             return $cell->text();
         });
