@@ -1,13 +1,15 @@
 <?php
 error_reporting(1);
-require 'vendor/autoload.php';
+require_once ('vendor/autoload.php');
+require_once ('gtranslate.php');
 
 use Goutte\Client;
+
 
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_GET["user"]))
-    $_GET["user"] = "6800649";
+    $_GET["user"] = "5980605";
 
 function getProfile($user)
 {
@@ -15,11 +17,9 @@ function getProfile($user)
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
     $crawler = $client->request('GET', $url);
-    
     $contents = $crawler->filter('.content-box');
-    if ($contents->count()==0){
+    if ($contents->count() == 0)
         return [];
-    }
     // Find user profile on the page
     $profiles = $contents->each(function ($content) {
         $profile = new stdClass();
@@ -57,23 +57,24 @@ function getProfile($user)
 function getArticles($user, $source = "")
 {
     $client = new Client();
+
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
     if (isset($source))
         $url .= '/?view=' . $source;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('.profile-article');
-    if ($content->first() == null)
+    $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($contents->count() == 0)
         return [];
     // Find all the article elements on the page
-    $articles = $content->filter('.ar-list-item')->each(function ($node) {
+    $articles = $contents->each(function ($node) {
         $article = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
         $year = $node->filter('.ar-year');
         $cited = $node->filter('.ar-cited');
         $pub = $node->filter('.ar-pub');
-        $article->title = $title->text();
+        $article->title = translate($title->text());
         $article->link = $link;
         $article->year = $year->text();
         $article->cited = $cited->text();
@@ -103,12 +104,12 @@ function getIprs($user, $source = "iprs")
         $url .= '/?view=' . $source;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($contents->count() == 0)
         return [];
 
     // Find all the article elements on the page
-    $iprs = $content->each(function ($node) {
+    $iprs = $contents->each(function ($node) {
         $ipr = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -116,7 +117,7 @@ function getIprs($user, $source = "iprs")
         $ipr_number = $node->filter('.ar-cited');
         $ipr_cat = $node->filter('.ar-quartile');
         $pub = $node->filter('.ar-pub');
-        $ipr->title = $title->text();
+        $ipr->title = translate($title->text());
         $ipr->link = $link;
         $ipr->year = $year->text();
         $ipr->number = $ipr_number->text();
@@ -157,11 +158,11 @@ function getResearches($user, $source = "researches")
     $crawler = $client->request('GET', $url);
 
     // Find all the article elements on the page
-    $content = $crawler->filter('.profile-article')->filter('.ar-list-item');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
+    if ($contents->count() == 0)
         return [];
 
-    $researches = $content->each(function ($node) {
+    $researches = $contents->each(function ($node) {
         $research = new stdClass();
         $title = $node->filter('.ar-title');
         $link = $title->filter('a')->attr('href');
@@ -169,7 +170,7 @@ function getResearches($user, $source = "researches")
         $fund = $node->filter('.ar-quartile');
         $src = $node->filter('.text-info');
         // $pub = $node->filter('.ar-pub');
-        $research->title = $title->text();
+        $research->title = translate($title->text());
         $research->link = $link;
         $research->year = $year->text();
         $research->fund = $fund->text();
@@ -200,11 +201,11 @@ function summary($user){
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
     $crawler = $client->request('GET', $url);
-    $content = $crawler->filter('table tr');
-    if ($content->count() == 0)
+    $contents = $crawler->filter('table tr');
+    if ($contents->count() == 0)
         return [];
 
-    $tableData = $content->each(function ($row) {
+    $tableData = $contents->each(function ($row) {
         return $row->filter('td')->each(function ($cell) {
             return $cell->text();
         });
@@ -221,15 +222,15 @@ function summary($user){
 }
 $sinta = new stdClass();
 $sinta->profile = getProfile($_GET["user"]);
-// $sinta->articles->scopus = getArticles($_GET["user"],"scopus");
-// $sinta->articles->wos = getArticles($_GET["user"],"wos");
-// $sinta->articles->googlescholar = getArticles($_GET["user"],"googlescholar");
-// // // $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
-// // // $sinta->articles->rama = getArticles($_GET["user"],"rama");
-// $sinta->iprs = getIprs($_GET["user"]);
-// $sinta->researches = getResearches($_GET["user"]);
-// $sinta->service = getResearches($_GET["user"],"services");
-// $sinta->summary = summary($_GET["user"]);
+$sinta->articles->scopus = getArticles($_GET["user"],"scopus");
+$sinta->articles->wos = getArticles($_GET["user"],"wos");
+$sinta->articles->googlescholar = getArticles($_GET["user"],"googlescholar");
+// // $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
+// // $sinta->articles->rama = getArticles($_GET["user"],"rama");
+$sinta->iprs = getIprs($_GET["user"]);
+$sinta->researches = getResearches($_GET["user"]);
+$sinta->service = getResearches($_GET["user"],"services");
+$sinta->summary = summary($_GET["user"]);
 
 // print_r($sinta);
 echo json_encode($sinta);

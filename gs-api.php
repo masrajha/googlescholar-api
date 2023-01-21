@@ -25,6 +25,7 @@ function getProfile($user)
     $tableData = $tableContent->filter('tr')->each(function ($row){
         $pub = new stdClass();
         $title = $row->filter('td.gsc_a_t > a');
+        $url = "https://scholar.google.com".$title->attr('href');
         $authors = $row->filter('td.gsc_a_t > div:nth-child(2)');
         $jurnal = $row->filter('td.gsc_a_t > div:nth-child(3)');
         $cited = $row->filter('td.gsc_a_c > a');
@@ -35,7 +36,7 @@ function getProfile($user)
         $pub->jurnal=$jurnal->text();
         $pub->cited=$cited->text();
         $pub->year=$year->text();
-
+        $pub->url=$url;
         return $pub;
         // return $row->filter('td')->each(function ($cell){
         //     return $cell->text();
