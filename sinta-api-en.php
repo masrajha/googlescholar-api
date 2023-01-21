@@ -1,7 +1,7 @@
 <?php
 error_reporting(1);
-require_once ('vendor/autoload.php');
-require_once ('gtranslate.php');
+require_once('vendor/autoload.php');
+require_once('gtranslate.php');
 
 use Goutte\Client;
 
@@ -9,7 +9,7 @@ use Goutte\Client;
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_GET["user"]))
-    $_GET["user"] = "5980605";
+    $_GET["user"] = "5980587";
 
 function getProfile($user)
 {
@@ -148,12 +148,15 @@ function getIprs($user, $source = "iprs")
  * 
  * $source value 'services' or 'researches'
  */
-function getResearches($user, $source = "researches")
+function getResearches($user, $source = "researches", $page = 1)
 {
     $client = new Client();
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
     if (isset($source))
         $url .= '/?view=' . $source;
+
+    if (isset($page))
+        $url .= '&page=' . $page;
 
     $crawler = $client->request('GET', $url);
 
@@ -175,9 +178,9 @@ function getResearches($user, $source = "researches")
         $research->year = $year->text();
         $research->fund = $fund->text();
         $research->source = "";
-        if ($src->count()>0)
+        if ($src->count() > 0)
             $research->source = $src->text();
-        
+
 
         // $research->pub = $pub->text();
 
@@ -196,7 +199,8 @@ function getResearches($user, $source = "researches")
     }
     return $data;
 }
-function summary($user){
+function summary($user)
+{
     $client = new Client();
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
 
@@ -208,29 +212,36 @@ function summary($user){
     $tableData = $contents->each(function ($row) {
         return $row->filter('td')->each(function ($cell) {
             return $cell->text();
-        });
+        }
+        );
     });
     array_shift($tableData);
     $summaries = [];
-    foreach($tableData as $el){
+    foreach ($tableData as $el) {
         $label = array_shift($el);
-        $summaries[$label]["scopus"]= $el[0];
-        $summaries[$label]["gs"]= $el[1];
-        $summaries[$label]["wos"]= $el[2];
+        $summaries[$label]["scopus"] = $el[0];
+        $summaries[$label]["gs"] = $el[1];
+        $summaries[$label]["wos"] = $el[2];
     }
     return $summaries;
 }
 $sinta = new stdClass();
 $sinta->profile = getProfile($_GET["user"]);
-$sinta->articles->scopus = getArticles($_GET["user"],"scopus");
-$sinta->articles->wos = getArticles($_GET["user"],"wos");
-$sinta->articles->googlescholar = getArticles($_GET["user"],"googlescholar");
+$gs = [];
+$gs=array_merge($gs,getArticles($_GET["user"], "googlescholar", 1));
+$gs=array_merge($gs,getArticles($_GET["user"], "googlescholar", 2));
+
+$sinta->articles->scopus = getArticles($_GET["user"], "scopus");
+$sinta->articles->wos = getArticles($_GET["user"], "wos");
+$sinta->articles->googlescholar = $gs;
 // // $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
 // // $sinta->articles->rama = getArticles($_GET["user"],"rama");
 $sinta->iprs = getIprs($_GET["user"]);
 $sinta->researches = getResearches($_GET["user"]);
-$sinta->service = getResearches($_GET["user"],"services");
+$sinta->service = getResearches($_GET["user"], "services");
 $sinta->summary = summary($_GET["user"]);
 
-// print_r($sinta);
-echo json_encode($sinta);
+print_r($sinta);
+
+// echo count($dt);
+// echo json_encode($dt);

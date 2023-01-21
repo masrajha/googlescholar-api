@@ -1,7 +1,7 @@
 <?php
 error_reporting(1);
 require_once('vendor/autoload.php');
-require_once('gtranslate.php');
+
 
 use Goutte\Client;
 
@@ -74,7 +74,7 @@ function getArticles($user, $source = "")
         $year = $node->filter('.ar-year');
         $cited = $node->filter('.ar-cited');
         $pub = $node->filter('.ar-pub');
-        $article->title = translate($title->text());
+        $article->title = $title->text();
         $article->link = $link;
         $article->year = $year->text();
         $article->cited = $cited->text();
@@ -117,7 +117,7 @@ function getIprs($user, $source = "iprs")
         $ipr_number = $node->filter('.ar-cited');
         $ipr_cat = $node->filter('.ar-quartile');
         $pub = $node->filter('.ar-pub');
-        $ipr->title = translate($title->text());
+        $ipr->title = $title->text();
         $ipr->link = $link;
         $ipr->year = $year->text();
         $ipr->number = $ipr_number->text();
@@ -173,7 +173,7 @@ function getResearches($user, $source = "researches", $page = 1)
         $fund = $node->filter('.ar-quartile');
         $src = $node->filter('.text-info');
         // $pub = $node->filter('.ar-pub');
-        $research->title = translate($title->text());
+        $research->title = $title->text();
         $research->link = $link;
         $research->year = $year->text();
         $research->fund = $fund->text();
