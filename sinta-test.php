@@ -253,10 +253,10 @@ switch ($_GET["service"]){
     case "iprs":
         $sinta->iprs = getIprs($_GET["user"]);
         break;
-    case "researches": $sinta->researches = getResearches($_GET["user"]);
+    case "researches": $sinta->researches = getResearches($_GET["user"],"researches",$_GET["page"]);
         break;
 
-    case "services": $sinta->service = getResearches($_GET["user"], "services");
+    case "services": $sinta->service = getResearches($_GET["user"], "services",$_GET["page"]);
         break;
     
     case "summary":$sinta->summary = summary($_GET["user"]);
