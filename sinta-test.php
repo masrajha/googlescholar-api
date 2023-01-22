@@ -11,6 +11,15 @@ header('Content-Type: application/json; charset=utf-8');
 if (!isset($_GET["user"]))
     $_GET["user"] = "5980587";
 
+if (!isset($_GET["service"]))
+    $_GET["service"] = "profile";
+
+if (!isset($_GET["page"]))
+    $_GET["page"] = 1;
+
+if (!isset($_GET["view"]))
+    $_GET["view"] = "googlescholar";
+
 function getProfile($user)
 {
     $client = new Client();
@@ -54,13 +63,16 @@ function getProfile($user)
  * - user is sinta-id
  * - source value: scopus, wos, googlescholar, garuda, rama 
  */
-function getArticles($user, $source = "")
+function getArticles($user, $source = "", $page = 1)
 {
     $client = new Client();
 
     $url = 'https://sinta.kemdikbud.go.id/authors/profile/' . $user;
     if (isset($source))
         $url .= '/?view=' . $source;
+
+    if (isset($page))
+        $url .= '&page=' . $page;
 
     $crawler = $client->request('GET', $url);
     $contents = $crawler->filter('.profile-article')->filter('.ar-list-item');
@@ -210,9 +222,10 @@ function summary($user)
         return [];
 
     $tableData = $contents->each(function ($row) {
-        return $row->filter('td')->each(function ($cell) {
-            return $cell->text();
-        }
+        return $row->filter('td')->each(
+            function ($cell) {
+                return $cell->text();
+            }
         );
     });
     array_shift($tableData);
@@ -226,20 +239,30 @@ function summary($user)
     return $summaries;
 }
 $sinta = new stdClass();
-$sinta->profile = getProfile($_GET["user"]);
-$gs = [];
-$gs=array_merge($gs,getArticles($_GET["user"], "googlescholar", 1));
-$gs=array_merge($gs,getArticles($_GET["user"], "googlescholar", 2));
 
-$sinta->articles->scopus = getArticles($_GET["user"], "scopus");
-$sinta->articles->wos = getArticles($_GET["user"], "wos");
-$sinta->articles->googlescholar = $gs;
-// // $sinta->articles->garuda = getArticles($_GET["user"],"garuda");
-// // $sinta->articles->rama = getArticles($_GET["user"],"rama");
-$sinta->iprs = getIprs($_GET["user"]);
-$sinta->researches = getResearches($_GET["user"]);
-$sinta->service = getResearches($_GET["user"], "services");
-$sinta->summary = summary($_GET["user"]);
+switch ($_GET["service"]){
+    case "profile": $sinta->profile = getProfile($_GET["user"]);
+        break;
+    case "articles":
+        $sinta->articles->googlescholar = getArticles(
+            $_GET["user"],
+            $_GET["view"], 
+            $_GET["page"]
+        );
+        break;
+    case "iprs":
+        $sinta->iprs = getIprs($_GET["user"]);
+        break;
+    case "researches": $sinta->researches = getResearches($_GET["user"]);
+        break;
+
+    case "services": $sinta->service = getResearches($_GET["user"], "services");
+        break;
+    
+    case "summary":$sinta->summary = summary($_GET["user"]);
+        break;
+
+}
 
 print_r($sinta);
 
