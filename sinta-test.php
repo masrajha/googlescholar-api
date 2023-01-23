@@ -264,7 +264,7 @@ switch ($_GET["service"]){
 
 }
 
-print_r($sinta);
+// print_r($sinta);
 
 // echo count($dt);
-// echo json_encode($dt);
+echo json_encode($sinta);
